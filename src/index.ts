@@ -1,9 +1,11 @@
-import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
-import { errorBoundary } from "./middlewares/errorBoundary";
 
 dotenv.config();
+
+import express from "express";
+import cors from "cors";
+import { errorBoundary } from "./middlewares/errorBoundary";
+import { runMigrations } from "./db/migrations";
 const app = express();
 
 app.use(express.json());
@@ -13,6 +15,13 @@ const PORT = process.env.PORT;
 // @ts-ignore
 
 app.use(errorBoundary);
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+
+const startServe = async () => {
+  await runMigrations();
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+};
+
+startServe();
