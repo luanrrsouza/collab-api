@@ -1,12 +1,15 @@
 import { ConflictError } from "../errors/ConflitctError";
-import { saveUser, validateUserExists } from "../repository/auth-respository";
+import { saveUser } from "../repository/auth-respository";
+import { userAlreadyExists } from "../repository/user-repository";
 
 import bcrypt from "bcrypt";
+
 import { CreateUserInput } from "../schemas/authSchema";
+import { UserProfile } from "../types/UserProfile";
 
 export async function createUser(user: CreateUserInput) {
-  const haveUser = await validateUserExists(user.email);
-  if (haveUser != null) {
+  const currentUser = await userAlreadyExists(user.email);
+  if (currentUser != null) {
     throw new ConflictError();
   }
 
@@ -20,4 +23,8 @@ export async function createUser(user: CreateUserInput) {
   const newUser = await saveUser(userWithHashedPassword);
 
   return newUser;
+}
+
+export async function saveOnBoarding(userProfile: UserProfile) {
+  const profile = await saveOnBoarding(userProfile);
 }

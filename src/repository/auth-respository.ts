@@ -1,5 +1,5 @@
-import db from "../db/connection";
 import { CreateUserInput } from "../schemas/authSchema";
+import db from "../db/connection";
 
 export async function saveUser(user: CreateUserInput) {
   return db.oneOrNone(
@@ -9,6 +9,3 @@ export async function saveUser(user: CreateUserInput) {
 }
 
 // TO - DO: Levar essa função pro repositorio de User, quando for criado.
-export async function validateUserExists(email: String) {
-  return db.oneOrNone("SELECT * FROM users WHERE email=$1", [email]);
-}
